@@ -24,7 +24,7 @@ clean:
 	$(COMPOSE) down
 
 gen:
-	poetry run python -m scripts.generate
+	./scripts/gen.sh
 
 load:
 	./scripts/load.sh
