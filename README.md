@@ -1,3 +1,5 @@
+[![labs](https://github.com/zhozhyr/https://github.com/zhozhyr/abds_labs/actions/workflows/energosbyt.energosbyt.lab.yml/badge.svg)](https://github.com/zhozhyr/https://github.com/zhozhyr/abds_labs/actions/workflows/energosbyt.energosbyt.lab.yml)
+
 ## Лабораторная работа №1. SCD в ClickHouse
 
 ### Запуск
