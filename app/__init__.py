@@ -1,0 +1,1 @@
+"""EnergoSbyt HTTP service."""

@@ -1,0 +1,133 @@
+{
+  "info": {
+    "_postman_id": "9b82030d-dcf9-4b36-b9a9-a0e9ac822a59",
+    "name": "EnergoSbyt Lab 1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "Ping",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/ping"
+      }
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get user",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/users/1"
+          }
+        },
+        {
+          "name": "Update user",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fio\": \"Петрова Анна Сергеевна\",\n  \"phone\": \"+79111111111\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/users/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Realty",
+      "item": [
+        {
+          "name": "Get realty",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/realty/1"
+          }
+        },
+        {
+          "name": "Create reading",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 1,\n  \"gauge_id\": 1,\n  \"tariff_id\": 1,\n  \"reading_date\": \"2026-10-01\",\n  \"day_kw\": 1250,\n  \"night_kw\": 300\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/realty/1/readings"
+          }
+        },
+        {
+          "name": "Get readings",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/realty/1/readings?date_from=2026-10-01&date_to=2026-10-31"
+          }
+        },
+        {
+          "name": "Get invoices",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/realty/1/invoices?limit=10&offset=0"
+          }
+        },
+        {
+          "name": "Install gauge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gauge_id\": 1001\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/realty/1/gauges"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get tariff",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/tariffs?date=2026-10-27"
+      }
+    }
+  ]
+}
