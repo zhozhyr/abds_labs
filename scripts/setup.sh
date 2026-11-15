@@ -5,5 +5,5 @@ set -euo pipefail
 source scripts/common.sh
 
 "${client[@]}" --multiquery < sql/schema.sql
-poetry run python -m scripts.generate
+scripts/gen.sh
 scripts/load.sh
