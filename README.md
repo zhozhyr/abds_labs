@@ -1,48 +1,32 @@
-# Лабораторный проект
+[![labs](https://github.com/zhozhyr/https://github.com/zhozhyr/abds_labs/actions/workflows/energosbyt.energosbyt.lab.yml/badge.svg)](https://github.com/zhozhyr/https://github.com/zhozhyr/abds_labs/actions/workflows/energosbyt.energosbyt.lab.yml)
 
-[![labs](https://github.com/{your_username}/{your_repo}/actions/workflows/energosbyt.energosbyt.lab.yml/badge.svg)](https://github.com/{your_username}/{your_repo}/actions/workflows/energosbyt.energosbyt.lab.yml)
+## Лабораторная работа №1. SCD в ClickHouse
 
-Backend-сервис вымышленной ЖКХ-компании для практики по курсу «Архитектура систем обработки больших данных».
+### Запуск
 
-## С чего начать
+Команды:
 
-1. **‼️ Настройте репозиторий** — проведите обязательную настройку контрибьюторов и защиты ветки (см. ниже)
-2. **[Лабораторные работы](https://github.com/sitnikovik/abds/tree/master/lab)** — технические задания для каждой лабораторной работы
-3. **[CONTRIBUTING.md](CONTRIBUTING.md)** — требования к структуре проекта, процесс разработки и проверки
-4. **[Документация курса](https://github.com/sitnikovik/abds)** — методические материалы и дополнительные ресурсы
+- `make gen` - создать CSV в `data/`
+- `make load` - загрузить CSV в ClickHouse
+- `make run` - запустить сервис
+- `make setup` - создать схему, сгенерировать и загрузить данные
+- `make teardown` - удалить базу `energosbyt`
+- `make check` - запустить Ruff, mypy и pytest
 
-> [!IMPORTANT]
-> Поменяйте `{your_username}` и `{your_repo}` в badge на ваши имя пользователя и название репозитория.
+`make load` очищает таблицы перед загрузкой, поэтому повторный запуск не создаёт дубли
 
-## Настройка репозитория
+Swagger: `http://localhost:8080/docs`
 
-### Защита основной ветки
+Postman: [`api/energosbyt.postman_collection.json`](api/energosbyt.postman_collection.json)
 
-После создания репозитория из шаблона **обязательно настройте правила защиты для ветки `main`**:
+## Ключи сортировки и партиционирование
 
-1. Откройте **Settings** → **Branches** → **Add classic branch protection rule**
-2. В поле **Branch name pattern** укажите: `main`
-3. Включите следующие опции:
-   - **Require a pull request before merging**
-     - Require approvals: **1**: требует минимум одного одобрения перед слиянием
-   - ***Require status checks to pass before merging***
-     - Выберите *"autograder"*: проверит все лабораторные работы автоматически
-     - ***Require branches to be up to date before merging*** (рекомендуется):
-     требует, чтобы ветка PR была синхронизирована с последними изменениями из основной ветки перед слиянием
-   - ***Do not allow bypassing the above settings***: запрещает обход настроек защиты ветки
-4. Нажмите **Create** или **Save changes**
-
-> ⚠️ **Важно:** Без этих настроек автоматические проверки не будут блокировать PR с ошибками.
-
-### Добавление коллабораторов
-
-Чтобы преподаватели могли проводить код-ревью:
-
-1. Откройте **Settings** → **Collaborators**
-2. Нажмите **Add people**
-3. Добавьте всех кто есть в списке ревьюеров в файле [CODEOWNERS](CODEOWNERS)
-4. Выберите роль: **Write** (или выше), иначе ревьюер не сможет одобрить PR
-
-## Помощь
-
-Возникли вопросы? → [@sitnikovik](https://t.me/sitnikovik)
+| Таблица | `ORDER BY` | `PARTITION BY`           | причина                                                                  |
+| --- | --- |--------------------------|--------------------------------------------------------------------------|
+| `dim_realty` | `id` | -                        | поиск объекта по идентификатору                                          |
+| `dim_gauges` | `id` | -                        | поиск счётчика по идентификатору                                         |
+| `dim_tariffs` | `(id, valid_from)` | -                        | хранение версий тарифа по началу интервала                               |
+| `dim_users` | `id` | -                        | замена версии пользователя по `updated_at`                               |
+| `fact_gauge_bindings` | `(realty_id, gauge_id, created_at)` | -                        | установка и аннулирование имеют одинаковый ключ                          |
+| `fact_meter_readings` | `(realty_id, reading_date)` | `toYYYYMM(reading_date)` | корректировка заменяет показание за тот же день; запросы идут по периоду |
+| `fact_invoice` | `(realty_id, created_at)` | `toYYYYMM(created_at)`   | счета выбираются по объекту и сортируются по дате                        |

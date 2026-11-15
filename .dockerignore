@@ -1,0 +1,11 @@
+.git
+.idea
+.venv
+data
+volume
+tests
+api
+sql
+scripts
+__pycache__
+*.pyc
